@@ -1,14 +1,10 @@
 import db from "../config/db.js";
 
-// export const insertUser = async (logData) => {
-//     const [result] = await db.executeQuery("INSERT INTO login_logs SET ?", logData);
-//     return result;
-// }
-
-// export const getUserById = async (id) => {
-//     const [result] = await db.executeQuery("INSERT INTO login_logs SET ?", logData);
-//     return result;
-// }
+export const createUnmetUser = async (logData) => {
+    const [result] = await db.execute("INSERT INTO unmet_users (user_id, role, region, country) VALUES (?, ?, ?, ?)",
+      [logData?.user_id,logData?.role,logData?.region,logData?.country]);
+    return result;
+}
 
 export const getUnmetUserById = async (id, fields = ['*']) => {
   const columns = Array.isArray(fields) && fields.length ? fields.join(', ') : '*';
