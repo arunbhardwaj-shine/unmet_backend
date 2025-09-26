@@ -61,16 +61,3 @@ export const checkToken = async (req, res, next) => {
     next(err); 
   }
 };
-
-
-export const login = async (req, res) => {
-  // const { email, password } = req.body;
-  // const user = await findUserByEmail(email);
-  // if (!user) return res.status(400).json({ error: "User not found" });
-
-  // const valid = await bcrypt.compare(password, user.password);
-  // if (!valid) return res.status(400).json({ error: "Invalid password" });
-
-  // const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
-  // res.json({ token });
-};
