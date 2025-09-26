@@ -10,4 +10,12 @@ dotenv.config();
     database: process.env.DB_NAME,
   });
 
+  db.getConnection((err, connection) => {
+  if (err) {
+    console.error('Database connection failed:', err.message);
+  } else {
+    console.log('Database connection established successfully');
+    connection.release(); // important! release connection back to pool
+  }
+});
 export default db;
