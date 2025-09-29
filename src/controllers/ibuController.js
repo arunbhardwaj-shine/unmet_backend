@@ -21,6 +21,15 @@ export const AddIbuQuestions = async (req, res, next) => {
     }
 };
 
+export const getUserQuestion = async (req, res, next) => {
+    try {
+      const myQuestions = await userModel.getMyQuestions(req);
+      return successResponse(res, "Questions fetched successfully", myQuestions, 200);
+    } catch (err) {
+        next(err);
+    }
+};
+
 
 
 

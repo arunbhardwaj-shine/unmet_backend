@@ -17,7 +17,7 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/content", ContentRoutes);
-app.use("/api/ibu", ibuRoutes);
+app.use("/api/questions", ibuRoutes);
 
 // Not found route
 app.use((req, res, next) => {

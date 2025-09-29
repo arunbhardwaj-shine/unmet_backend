@@ -6,13 +6,20 @@ import { validate } from "../middleware/validationMiddleware.js";
 
 const router = express.Router();
 
-router.get("/get-publish-content", authenticateToken, ibuController.publishContent);
+router.get("/get-publish-question", authenticateToken, ibuController.publishContent);
 router.post(
-  '/add-ibu-question',
+  '/add-question',
   authenticateToken,
   ibuQuestionValidationRules,  
   validate,       
   ibuController.AddIbuQuestions             
+);
+
+router.get(
+  "/your-question",
+  authenticateToken,
+  validate,
+  ibuController.getUserQuestion
 );
 
 export default router;
