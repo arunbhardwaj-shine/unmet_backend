@@ -15,15 +15,7 @@ export const addRatingInfo = async(insertObj) => {
     const sqlInsert = `INSERT INTO pdf_action_stats (${columns}) VALUES (${placeholders})`;
     const [insertResult] = await db.query(sqlInsert, values);
 
-    const sqlCount = `
-      SELECT COUNT(*) AS total_ratings 
-      FROM pdf_action_stats 
-      WHERE pdf_id = ? AND action_status = 4
-    `;
-    const [rows] = await db.query(sqlCount, [insertObj.pdf_id]);
-    return {
-        total_ratings: rows[0].total_ratings
-    }
+    return await getRatingForArticle(insertObj.pdf_id)
 }
 
 export const deleteRating = async (pdf_id, user_id) => {
@@ -35,5 +27,17 @@ export const deleteRating = async (pdf_id, user_id) => {
     [pdf_id, user_id]
   );
 
-  return result.affectedRows || 0;
+  return await getRatingForArticle(pdf_id);
 };
+
+const getRatingForArticle = async(pdf_id) => {
+  const sqlCount = `
+      SELECT COUNT(*) AS total_ratings
+      FROM pdf_action_stats
+      WHERE pdf_id = ? AND action_status = 4
+    `;
+  const [rows] = await db.query(sqlCount, [pdf_id]);
+  return {
+        total_ratings: rows[0].total_ratings
+    }
+}

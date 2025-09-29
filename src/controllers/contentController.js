@@ -56,8 +56,8 @@ export const addRating = async(req, res, next) => {
     const getRating = await checkRating(pdf_id,req?.authId);
     if(getRating?.total > 0){
       //delete the rating
-      await deleteRating(pdf_id,req?.authId);
-      return successResponse(res, "Rating deleted successfully", {});
+      const result = await deleteRating(pdf_id,req?.authId);
+      return successResponse(res, "Rating deleted successfully", result);
     }else{
       //add the rating
       const getIp  = getLocalIPs(req);
