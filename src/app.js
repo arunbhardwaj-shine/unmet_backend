@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import ContentRoutes from "./routes/contentRoutes.js";
+import ibuRoutes from "./routes/ibuRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import cors from "cors";
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/content", ContentRoutes);
+app.use("/api/ibu", ibuRoutes);
 
 // Not found route
 app.use((req, res, next) => {
