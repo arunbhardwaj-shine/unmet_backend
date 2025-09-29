@@ -40,6 +40,16 @@ export const getContent = async(req, res, next) => {
   }
 };
 
+export const getFavouriteContent = async(req, res, next) => {
+  try{
+    const result = await getArticleContent(req?.authId);
+    const answerdResult = result?.length > 0 ? result?.filter((item) => item.self_rate == 1) : [];
+    return successResponse(res, "Data get successfully", answerdResult);
+  }catch(err){
+    next(err);
+  }
+};
+
 export const addRating = async(req, res, next) => {
   try{
     const pdf_id = req?.body?.pdf_id;

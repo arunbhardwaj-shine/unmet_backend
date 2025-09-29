@@ -1,5 +1,5 @@
 import express from "express";
-import { getAgeDiagnosis, getNarrativeData, getContent, addRating } from "../controllers/contentController.js";
+import { getAgeDiagnosis, getNarrativeData, getContent, addRating, getFavouriteContent } from "../controllers/contentController.js";
 import { authenticateToken } from "../middleware/authMiddelware.js";
 import { validate } from "../middleware/validationMiddleware.js";
 import { addRatingValidation } from "../validations/commonValidation.js";
@@ -33,6 +33,13 @@ router.post(
   addRatingValidation,
   validate,
   addRating
+);
+
+router.get(
+  "/get-favourite-content",
+  authenticateToken,
+  validate,
+  getFavouriteContent
 );
 
 export default router;

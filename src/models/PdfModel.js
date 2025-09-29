@@ -5,6 +5,7 @@ export const getArticleContent = async (user_id) => {
         pdfs.created as created_date,
         DATE_FORMAT(pdfs.creation_date, "%d.%M.%Y") as creation_date,
         pdfs.age_groups,
+        pdfs.diagnosis,
         COUNT(pdf_action.id) AS rating,
         CASE
             WHEN COUNT(user_rate.id) > 0 THEN 1
@@ -37,7 +38,7 @@ export const getArticleContent = async (user_id) => {
         LEFT JOIN pdf_action_stats AS pdf_action ON pdf_action.pdf_id = pdfs.id AND pdf_action.action_status = 4
         LEFT JOIN pdf_action_stats AS user_rate ON user_rate.pdf_id = pdfs.id AND user_rate.action_status = 4
         AND user_rate.user_id = ?
-        where uploaded_by = ? and delete_status = 0 and draft = 0 GROUP BY pdfs.id`,
+        where uploaded_by = ? and delete_status = 0 and draft = 0 GROUP BY pdfs.id order by creation_date Desc`,
          [user_id, process.env.OWNER_ID]);
     return result;
 }
