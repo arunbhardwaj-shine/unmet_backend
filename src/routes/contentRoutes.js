@@ -28,7 +28,7 @@ router.get(
 );
 
 router.post(
-  "/add-rating",
+  "/toggle-rating",
   authenticateToken,
   addRatingValidation,
   validate,

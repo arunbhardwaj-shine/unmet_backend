@@ -1,5 +1,10 @@
 import db from "../config/db.js";
 
+export const checkRating = async(pdf_id, user_id) => {
+  const [result] = await db.execute(`Select count(id) as total from pdf_action_stats where pdf_id = ? and user_id = ? and action_status = 4 group by pdf_id`,[pdf_id,user_id]);
+  return result[0] || 0;
+}
+
 export const addRatingInfo = async(insertObj) => {
     const keys = Object.keys(insertObj);
     const values = Object.values(insertObj);
@@ -20,3 +25,15 @@ export const addRatingInfo = async(insertObj) => {
         total_ratings: rows[0].total_ratings
     }
 }
+
+export const deleteRating = async (pdf_id, user_id) => {
+  const [result] = await db.execute(
+    `DELETE FROM pdf_action_stats
+     WHERE pdf_id = ?
+       AND user_id = ?
+       AND action_status = 4`,
+    [pdf_id, user_id]
+  );
+
+  return result.affectedRows || 0;
+};
