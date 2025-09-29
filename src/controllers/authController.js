@@ -56,7 +56,7 @@ export const checkToken = async (req, res, next) => {
       userToken: encrypted,
     }  
       
-    return successResponse(res, "Login successful", { payload });
+    return successResponse(res, "Login successfull", payload);
   }catch(err){
     next(err); 
   }
