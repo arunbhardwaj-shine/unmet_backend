@@ -1,41 +1,26 @@
 import { errorResponse, successResponse } from "../helpers/responseHelper.js";
 import * as userModel from "../models/ibuModel.js";
 
-export const publishContent = async (req, res) => {
+export const publishContent = async (req, res, next) => {
+  try {
+    const questions = await userModel.publishQuestions(req.authId);
+    return successResponse(res, "Questions fetched successfully", questions, 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const AddIbuQuestions = async (req, res, next) => {
     try {
-        const questions = await userModel.publishQuestions(req.authId);
-        return successResponse(
-            res,
-            "Questions fetched successfully",
-            questions,
-            200
-        );
-    } catch (error) {
-        return errorResponse(
-            res,
-            error.message || "Failed to fetch questions",
-            400
-        );
+        const data = await userModel.AddIbuQuestionsModel(req);
+
+        return successResponse(res, 'Question added successfully', data, 201);
+    } catch (err) {
+        next(err);
     }
 };
 
-export const AddIbuQuestions = async (req, res) => {
-    try {
-        const result = await userModel.AddIbuQuestionsModel(req);
-         console.log("result",result)
-        return successResponse(res, result.message, result.data, 201);
-    } catch (error) {
-
-        if (
-            error.message === 'userId is required' ||
-            error.message === 'question is required'
-        ) {
-            return errorResponse(res, error.message, 400);
-        }
-
-        return errorResponse(res, "Something went wrong", 500);
-    }
-};
 
 
 
