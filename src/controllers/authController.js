@@ -54,7 +54,8 @@ export const checkToken = async (req, res, next) => {
       userRegistered,
       jwtToken: createTokenObj,
       userToken: encrypted,
-    }  
+      name:getUserInfo?.name.trim()
+    }
       
     return successResponse(res, "Login successfull", payload);
   }catch(err){

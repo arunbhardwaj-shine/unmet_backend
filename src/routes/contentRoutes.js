@@ -1,7 +1,8 @@
 import express from "express";
-import { getAgeDiagnosis, getNarrativeData } from "../controllers/contentController.js";
+import { getAgeDiagnosis, getNarrativeData, getContent, addRating } from "../controllers/contentController.js";
 import { authenticateToken } from "../middleware/authMiddelware.js";
 import { validate } from "../middleware/validationMiddleware.js";
+import { addRatingValidation } from "../validations/commonValidation.js";
 
 const router = express.Router();
 
@@ -17,6 +18,21 @@ router.get(
   authenticateToken,
   validate,
   getNarrativeData
+);
+
+router.get(
+  "/get-content",
+  authenticateToken,
+  validate,
+  getContent
+);
+
+router.post(
+  "/add-rating",
+  authenticateToken,
+  addRatingValidation,
+  validate,
+  addRating
 );
 
 export default router;

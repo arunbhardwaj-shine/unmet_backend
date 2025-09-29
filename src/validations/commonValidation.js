@@ -5,3 +5,7 @@ export const addUserValidation = [
     body("region").notEmpty().withMessage("Region is required"),
     body("country").notEmpty().withMessage("Country is required"),
 ];
+
+export const addRatingValidation = [
+    body("pdf_id").notEmpty().withMessage("Pdf id is required"),
+];
