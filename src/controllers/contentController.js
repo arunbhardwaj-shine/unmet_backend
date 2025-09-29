@@ -33,7 +33,7 @@ export const getNarrativeData = async(req, res, next) => {
 
 export const getContent = async(req, res, next) => {
   try{
-    const result = await getArticleContent();
+    const result = await getArticleContent(req?.authId);
     return successResponse(res, "Data get successfully", result);
   }catch(err){
     next(err);
