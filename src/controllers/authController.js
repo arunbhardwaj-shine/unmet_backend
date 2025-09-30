@@ -1,7 +1,7 @@
 import { findUserByEmail } from "../models/UserModel.js";
 import { createLogs } from "../models/LoginLogsModel.js";
 import { getUnmetUserById } from "../models/UnmetUsers.js";
-import { fetchUserData } from "../helpers/commonHelper.js";
+import { fetchUserData, getUserEncryptedId } from "../helpers/commonHelper.js";
 import { errorResponse, successResponse } from "../helpers/responseHelper.js";
 import { getLocalIPs } from "../helpers/requestHelper.js";
 import { encryptedToken } from "../utils/cryptoUtils.js";
@@ -34,6 +34,7 @@ export const checkToken = async (req, res, next) => {
     // });
 
     const checkUnmetUser = await getUnmetUserById(getUserInfo?.id, ['id']);
+    const getEncryptedUserId = await getUserEncryptedId(getUserInfo?.id, ['id']);
     let userRegistered = 0;
     if (checkUnmetUser) {
       userRegistered = 1;
@@ -47,7 +48,8 @@ export const checkToken = async (req, res, next) => {
         loginType: getUserInfo?.login_type,
         userToken: encrypted,
         type: "sso",
-        ssoMail: userData.mail
+        ssoMail: userData.mail,
+        encryptedId: getEncryptedUserId
       });
 
     let payload = {

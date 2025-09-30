@@ -20,6 +20,7 @@ export const authenticateToken = async(req, res, next) => {
     req.name = decoded?.name;
     req.email = decoded?.email;
     req.authId = userId;
+    req.encryptedId = decoded?.encryptedId;
     next();
   } catch (err) {
     res.status(401).json({ msg: "Token is not valid" });

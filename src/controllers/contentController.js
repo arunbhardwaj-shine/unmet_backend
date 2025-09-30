@@ -33,7 +33,7 @@ export const getNarrativeData = async(req, res, next) => {
 
 export const getContent = async(req, res, next) => {
   try{
-    const result = await getArticleContent(req?.authId);
+    const result = await getArticleContent(req);
     return successResponse(res, "Data get successfully", result);
   }catch(err){
     next(err);
@@ -42,7 +42,7 @@ export const getContent = async(req, res, next) => {
 
 export const getFavouriteContent = async(req, res, next) => {
   try{
-    const result = await getArticleContent(req?.authId);
+    const result = await getArticleContent(req);
     const answerdResult = result?.length > 0 ? result?.filter((item) => item.self_rate == 1) : [];
     return successResponse(res, "Data get successfully", answerdResult);
   }catch(err){

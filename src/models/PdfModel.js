@@ -1,7 +1,9 @@
 import db from "../config/db.js";
 
-export const getArticleContent = async (user_id) => {
-    const [result] = await db.execute(`Select pdfs.id,pdfs.title,pdfs.pdf_sub_title,pdfs.category,pdfs.tags,
+export const getArticleContent = async (req) => {
+    const user_id = req?.authId;
+    const encryptedId = req?.encryptedId;
+    const [result] = await db.execute(`Select pdfs.id,pdfs.title,pdfs.pdf_sub_title,pdfs.category,pdfs.tags,pdfs.file_type,
         pdfs.created as created_date,
         DATE_FORMAT(pdfs.creation_date, "%d.%M.%Y") as creation_date,
         pdfs.age_groups,
@@ -13,7 +15,7 @@ export const getArticleContent = async (user_id) => {
         END AS self_rate,
         case
         when pdfs.spc_included =1 THEN  concat("${process.env.DOCINTEL_LINK}","libraries/article_preview/",pdfs.id )
-                ELSE   concat("${process.env.DOCINTEL_LINK}", pdfs.folder_name ,"/", pdfs.code, "_","JUFCJTEzJUNEWSVBNCVEOCVEREQ=")
+                ELSE   concat("${process.env.DOCINTEL_LINK}", pdfs.folder_name ,"/", pdfs.code, "_","${encryptedId}")
                 END as previewArticle,
         IF(
             pdfs.uploaded_by = 2147541300,
@@ -38,7 +40,7 @@ export const getArticleContent = async (user_id) => {
         LEFT JOIN pdf_action_stats AS pdf_action ON pdf_action.pdf_id = pdfs.id AND pdf_action.action_status = 4
         LEFT JOIN pdf_action_stats AS user_rate ON user_rate.pdf_id = pdfs.id AND user_rate.action_status = 4
         AND user_rate.user_id = ?
-        where uploaded_by = ? and delete_status = 0 and draft = 0 GROUP BY pdfs.id order by creation_date Desc`,
+        where uploaded_by = ? and delete_status = 0 and draft = 0 and folder_name != "video" GROUP BY pdfs.id order by creation_date Desc`,
          [user_id, process.env.OWNER_ID]);
     return result;
 }
