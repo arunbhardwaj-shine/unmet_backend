@@ -8,11 +8,16 @@ export const getArticleContent = async (req) => {
         DATE_FORMAT(pdfs.creation_date, "%d.%M.%Y") as creation_date,
         pdfs.age_groups,
         pdfs.diagnosis,
-        COUNT(pdf_action.id) AS rating,
+        COUNT(DISTINCT pdf_action.id) AS rating,
         CASE
-            WHEN COUNT(user_rate.id) > 0 THEN 1
+            WHEN COUNT(DISTINCT user_rate.id) > 0 THEN 1
             ELSE 0
         END AS self_rate,
+        CASE
+            WHEN pdfs.file_type IN ('pdf','video','iframe') THEN pdfs.pdf_file
+            WHEN pdfs.file_type = 'ebook' THEN
+            GROUP_CONCAT(DISTINCT pdf_files.file_name ORDER BY pdf_files.id SEPARATOR ',')
+        END AS pdf_files,
         case
         when pdfs.spc_included =1 THEN  concat("${process.env.DOCINTEL_LINK}","libraries/article_preview/",pdfs.id )
                 ELSE   concat("${process.env.DOCINTEL_LINK}", pdfs.folder_name ,"/", pdfs.code, "_","${encryptedId}")
@@ -40,7 +45,8 @@ export const getArticleContent = async (req) => {
         LEFT JOIN pdf_action_stats AS pdf_action ON pdf_action.pdf_id = pdfs.id AND pdf_action.action_status = 4
         LEFT JOIN pdf_action_stats AS user_rate ON user_rate.pdf_id = pdfs.id AND user_rate.action_status = 4
         AND user_rate.user_id = ?
-        where uploaded_by = ? and delete_status = 0 and draft = 0 and folder_name != "video" GROUP BY pdfs.id order by creation_date Desc`,
+        LEFT JOIN pdf_files ON pdf_files.pdf_id = pdfs.id
+        where uploaded_by = ? and delete_status = 0 and draft = 0 and pdfs.folder_name != "video" GROUP BY pdfs.id order by creation_date Desc`,
          [user_id, process.env.OWNER_ID]);
     return result;
 }
