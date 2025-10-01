@@ -16,7 +16,7 @@ export const checkToken = async (req, res, next) => {
         return errorResponse(res, "something went wrong", 400, { error: "Invalid SSO credentials. Please try again."});
     }
     const getUserInfo = await findUserByEmail(userData.mail, ['id','name','email','group_id','login_type']);
-    if (getUserInfo.length === 0) {
+    if (!getUserInfo) {
       return errorResponse(res, "something went wrong", 400, { error: "User not found."});
     }
 
