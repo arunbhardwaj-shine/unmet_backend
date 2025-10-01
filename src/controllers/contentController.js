@@ -1,7 +1,7 @@
 import { errorResponse, successResponse } from "../helpers/responseHelper.js";
 import { getNarrativeCategoriesAndAgeGroups, getNarrativeDataResult } from "../models/narrativeModel.js";
 import { getArticleContent } from "../models/PdfModel.js";
-import { addRatingInfo, checkRating, deleteRating } from "../models/PdfActionModel.js";
+import { addPdfActionInfo, checkRating, deleteRating } from "../models/PdfActionModel.js";
 import { getLocalIPs } from "../helpers/requestHelper.js";
 
 
@@ -67,9 +67,26 @@ export const addRating = async(req, res, next) => {
         action_status: 4,
         ip_address: getIp,
       }
-      const result = await addRatingInfo(insertObj);
+      const result = await addPdfActionInfo(insertObj);
       return successResponse(res, "Rating added successfully", result);
     }
+  }catch(err){
+    next(err);
+  }
+};
+
+export const addDownloadStats = async(req, res, next) => {
+  try{
+    const pdf_id = req?.body?.pdf_id;
+    const getIp  = getLocalIPs(req);
+      let insertObj = {
+        user_id: req?.authId,
+        pdf_id: pdf_id,
+        action_status: 3,
+        ip_address: getIp,
+      }
+      const result = await addPdfActionInfo(insertObj);
+      return successResponse(res, "Rating added successfully", result);
   }catch(err){
     next(err);
   }

@@ -9,3 +9,7 @@ export const addUserValidation = [
 export const addRatingValidation = [
     body("pdf_id").notEmpty().withMessage("Pdf id is required"),
 ];
+
+export const addDownloadValidation = [
+    body("pdf_id").notEmpty().withMessage("Pdf id is required"),
+];

@@ -1,8 +1,8 @@
 import express from "express";
-import { getAgeDiagnosis, getNarrativeData, getContent, addRating, getFavouriteContent } from "../controllers/contentController.js";
+import { getAgeDiagnosis, getNarrativeData, getContent, addRating, getFavouriteContent, addDownloadStats } from "../controllers/contentController.js";
 import { authenticateToken } from "../middleware/authMiddelware.js";
 import { validate } from "../middleware/validationMiddleware.js";
-import { addRatingValidation } from "../validations/commonValidation.js";
+import { addDownloadValidation, addRatingValidation } from "../validations/commonValidation.js";
 
 const router = express.Router();
 
@@ -40,6 +40,14 @@ router.get(
   authenticateToken,
   validate,
   getFavouriteContent
+);
+
+router.post(
+  "/content-download",
+  authenticateToken,
+  addDownloadValidation,
+  validate,
+  addDownloadStats
 );
 
 export default router;
