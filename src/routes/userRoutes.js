@@ -1,5 +1,5 @@
 import express from "express";
-import { addUserDetails } from "../controllers/userController.js";
+import { addUserDetails, getUserDetails } from "../controllers/userController.js";
 import { authenticateToken } from "../middleware/authMiddelware.js";
 import { addUserValidation } from "../validations/commonValidation.js";
 import { validate } from "../middleware/validationMiddleware.js";
@@ -13,5 +13,13 @@ router.post(
   validate,
   addUserDetails
 );
+
+router.get(
+  "/get-user-details",
+  authenticateToken,
+  validate,
+  getUserDetails
+);
+
 
 export default router;

@@ -50,3 +50,11 @@ export const getArticleContent = async (req) => {
          [user_id, process.env.OWNER_ID]);
     return result;
 }
+
+export const getPdfs = async (req) => {
+    const [result] = await db.execute(`Select id from pdfs
+        where uploaded_by = ? and delete_status = 0 and draft = 0 and pdfs.folder_name != "video" GROUP BY pdfs.id`,
+         [process.env.OWNER_ID]);
+    const pdfids = result?.length > 0 ? result.map((item) => item.id) : [];
+    return pdfids;
+}
