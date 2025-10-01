@@ -3,7 +3,7 @@ import db from "../config/db.js";
 export const getArticleContent = async (req) => {
     const user_id = req?.authId;
     const encryptedId = req?.encryptedId;
-    const [result] = await db.execute(`Select pdfs.id,pdfs.title,pdfs.pdf_sub_title,pdfs.category,pdfs.tags,pdfs.file_type,
+    const [result] = await db.execute(`Select pdfs.id,pdfs.title,pdfs.pdf_sub_title,pdfs.category,pdfs.tags,pdfs.file_type,pdfs.folder_name,
         pdfs.created as created_date,
         DATE_FORMAT(pdfs.creation_date, "%d.%M.%Y") as creation_date,
         pdfs.age_groups,

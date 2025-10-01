@@ -13,3 +13,8 @@ export const addRatingValidation = [
 export const addDownloadValidation = [
     body("pdf_id").notEmpty().withMessage("Pdf id is required"),
 ];
+
+export const shareContentValidation = [
+    body("pdf_id").notEmpty().withMessage("Pdf id is required"),
+    body("email").notEmpty().withMessage("Email is required"),
+];

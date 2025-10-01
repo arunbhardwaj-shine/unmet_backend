@@ -30,3 +30,20 @@ export const getUserEncryptedId = async (userid) => {
     return null;
   }
 };
+
+export const shareArticle = async (payload) => {
+  try {
+    const response = await axios({
+      method: "POST",
+      url: "https://webinar.docintel.app/lmn/api/Webservice/share_article_doc",
+      data: payload,
+    });
+    return response?.data || null;
+  } catch (error) {
+    console.error(
+      'Failed to fetch user data:',
+      error?.response?.data || error.message
+    );
+    return null;
+  }
+};

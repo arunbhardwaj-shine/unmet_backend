@@ -3,6 +3,7 @@ import { getNarrativeCategoriesAndAgeGroups, getNarrativeDataResult } from "../m
 import { getArticleContent } from "../models/PdfModel.js";
 import { addPdfActionInfo, checkRating, deleteRating } from "../models/PdfActionModel.js";
 import { getLocalIPs } from "../helpers/requestHelper.js";
+import { shareArticle } from "../helpers/commonHelper.js";
 
 
 export const getAgeDiagnosis = async(req, res, next) => {
@@ -87,6 +88,26 @@ export const addDownloadStats = async(req, res, next) => {
       }
       const result = await addPdfActionInfo(insertObj);
       return successResponse(res, "Rating added successfully", result);
+  }catch(err){
+    next(err);
+  }
+};
+
+export const shareContent = async(req, res, next) => {
+  try{
+    const {pdf_id, email, message="",name=""} = req?.body;
+    let payload = {
+      "user_id": req?.authId,
+      "pdf_id" : pdf_id,
+      "sent_to_email" : email,
+      "message" : message,
+      "name": name,
+      "LangCode": "en",
+      "account_type":"unmet"
+    }
+    const response = await shareArticle(payload);
+    console.log(response)
+    return successResponse(res, response?.message, {}, response?.status_code);
   }catch(err){
     next(err);
   }
