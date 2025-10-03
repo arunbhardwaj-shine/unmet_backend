@@ -28,8 +28,8 @@ export const getUsersProfileData = async (id,pdfids) => {
     unmet.role,
     unmet.region,
     unmet.country,
-    count(shared.id) as shared,
-    count(stats.id) as share_content
+    count(shared.id) as total_shared,
+    count(stats.id) as total_download
 FROM users
 INNER JOIN unmet_users AS unmet
     ON unmet.user_id = users.id
