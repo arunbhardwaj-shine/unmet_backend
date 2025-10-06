@@ -14,7 +14,7 @@ export const publishQuestions = async (userId) => {
       topics,
       ibu_questions.delete_status,
       ibu_questions.updated,
-      ibu_questions.created
+      DATE_FORMAT(ibu_questions.created, "%d.%M.%Y") as created
     FROM ibu_questions
     LEFT JOIN users ON ibu_questions.user_id = users.id
     WHERE ibu_questions.delete_status = 0
@@ -54,7 +54,7 @@ export const getMyQuestions = async(req) => {
       topics,
       ibu_questions.delete_status,
       ibu_questions.updated,
-      ibu_questions.created
+      DATE_FORMAT(ibu_questions.created, "%d.%M.%Y") as created
     FROM ibu_questions
     LEFT JOIN users ON ibu_questions.user_id = users.id
     WHERE ibu_questions.delete_status = 0

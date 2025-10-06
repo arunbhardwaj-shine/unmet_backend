@@ -31,12 +31,12 @@ export const getUsersProfileData = async (id,pdfids) => {
     count(shared.id) as total_shared,
     count(stats.id) as total_download
 FROM users
-INNER JOIN unmet_users AS unmet
-    ON unmet.user_id = users.id
-INNER JOIN share_article AS shared
+left JOIN unmet_users AS unmet
+    ON unmet.user_id = ${id}
+left JOIN share_article AS shared
     ON shared.user_id = users.id
    AND shared.pdf_id IN (${placeholders})
-INNER JOIN pdf_action_stats AS stats
+left JOIN pdf_action_stats AS stats
     ON stats.user_id = users.id
    AND stats.action_status = 3
    AND stats.pdf_id IN (${placeholders})

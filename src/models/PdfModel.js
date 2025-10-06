@@ -4,6 +4,7 @@ export const getArticleContent = async (req) => {
     const user_id = req?.authId;
     const encryptedId = req?.encryptedId;
     const [result] = await db.execute(`Select pdfs.id,pdfs.title,pdfs.pdf_sub_title,pdfs.category,pdfs.tags,pdfs.file_type,pdfs.folder_name,
+        pdfs.sold_unsold as hide_in_hcp,pdfs.allow_share as share,pdfs.allow_download as download,
         pdfs.created as created_date,
         DATE_FORMAT(pdfs.creation_date, "%d.%M.%Y") as creation_date,
         pdfs.age_groups,
@@ -55,6 +56,6 @@ export const getPdfs = async (req) => {
     const [result] = await db.execute(`Select id from pdfs
         where uploaded_by = ? and delete_status = 0 and draft = 0 and pdfs.folder_name != "video" GROUP BY pdfs.id`,
          [process.env.OWNER_ID]);
-    const pdfids = result?.length > 0 ? result.map((item) => item.id) : [];
+    const pdfids = result?.length > 0 ? result.map((item) => item.id) : [99999999];
     return pdfids;
 }
