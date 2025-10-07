@@ -66,18 +66,12 @@ export const getRecentViewContent = async (req) => {
   const ownerId = process.env.OWNER_ID;
 
   const [recentViews] = await db.execute(
-    `
-    SELECT sp.pdf_id
-    FROM static_pdfs sp
-    INNER JOIN (
-      SELECT pdf_id, MAX(id) AS max_id
-      FROM static_pdfs
-      GROUP BY pdf_id
-    ) latest ON sp.id = latest.max_id
-    WHERE sp.user_id = ?
-    ORDER BY sp.id DESC
-    `,
-    [userId]
+    `SELECT sp.pdf_id FROM static_pdfs sp
+    INNER JOIN (SELECT pdf_id, MAX(id) AS max_id FROM static_pdfs
+      WHERE user_id = ? GROUP BY pdf_id
+    ) latest ON sp.pdf_id = latest.pdf_id AND sp.id = latest.max_id
+    INNER JOIN pdfs p ON p.id = sp.pdf_id WHERE sp.user_id = ? ORDER BY sp.id DESC`,
+    [userId,userId]
   );
 
   if (recentViews.length === 0) return [];
