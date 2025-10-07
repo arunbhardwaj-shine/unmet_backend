@@ -1,5 +1,5 @@
 import express from "express";
-import { getAgeDiagnosis, getNarrativeData, getContent, addRating, getFavouriteContent, addDownloadStats, shareContent } from "../controllers/contentController.js";
+import { getAgeDiagnosis, getNarrativeData, getContent, addRating, getFavouriteContent, addDownloadStats, shareContent, getRecentContent } from "../controllers/contentController.js";
 import { authenticateToken } from "../middleware/authMiddelware.js";
 import { validate } from "../middleware/validationMiddleware.js";
 import { addDownloadValidation, addRatingValidation, shareContentValidation } from "../validations/commonValidation.js";
@@ -40,6 +40,13 @@ router.get(
   authenticateToken,
   validate,
   getFavouriteContent
+);
+
+router.get(
+  "/get-recent-content",
+  authenticateToken,
+  validate,
+  getRecentContent
 );
 
 router.post(

@@ -1,6 +1,6 @@
 import { errorResponse, successResponse } from "../helpers/responseHelper.js";
 import { getNarrativeCategoriesAndAgeGroups, getNarrativeDataResult } from "../models/narrativeModel.js";
-import { getArticleContent } from "../models/PdfModel.js";
+import { getArticleContent, getPdfs, getRecentViewContent } from "../models/PdfModel.js";
 import { addPdfActionInfo, checkRating, deleteRating } from "../models/PdfActionModel.js";
 import { getLocalIPs } from "../helpers/requestHelper.js";
 import { shareArticle } from "../helpers/commonHelper.js";
@@ -106,9 +106,13 @@ export const shareContent = async(req, res, next) => {
       "account_type":"unmet"
     }
     const response = await shareArticle(payload);
-    console.log(response)
     return successResponse(res, response?.message, {}, response?.status_code);
   }catch(err){
     next(err);
   }
 };
+
+export const getRecentContent = async(req, res, next) => {
+  const recentlyViewed = await getRecentViewContent(req);
+  return successResponse(res, "Data get successfully", recentlyViewed);
+}
