@@ -6,6 +6,7 @@ import ContentRoutes from "./routes/contentRoutes.js";
 import ibuRoutes from "./routes/ibuRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import cors from "cors";
+import { authenticateToken } from "./middleware/authMiddelware.js";
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,14 @@ app.use(express.json());
 app.use(cors());
 // Routes
 app.use("/api/auth", authRoutes);
+
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/auth")) {
+    return next();
+  }
+  authenticateToken(req, res, next);
+});
+
 app.use("/api/users", userRoutes);
 app.use("/api/content", ContentRoutes);
 app.use("/api/questions", ibuRoutes);
