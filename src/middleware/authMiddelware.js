@@ -26,3 +26,12 @@ export const authenticateToken = async(req, res, next) => {
     res.status(401).json({ msg: "Token is not valid" });
   }
 };
+
+export const verifyRefreshToken = async(token) => {
+  try {
+    const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+    return payload;
+  } catch (err) {
+    res.status(401).json({ msg: "Token is not valid" });
+  }
+};

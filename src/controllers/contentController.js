@@ -9,13 +9,10 @@ import { shareArticle } from "../helpers/commonHelper.js";
 export const getAgeDiagnosis = async(req, res, next) => {
   try{
     const result = await getNarrativeCategoriesAndAgeGroups();
-    if(result?.tags.length > 0){
-      result.tags = result?.tags?.map((item) => item.product)
-    }
     let response = {
         categories: result?.categories,
         ageGroups: result?.ageGroups,
-        tags: result?.tags
+        contentCategory: result?.contentCategory,
     }
     return successResponse(res, "Data get successfully", response);
   }catch(err){

@@ -5,7 +5,8 @@ import { fetchUserData, getUserEncryptedId } from "../helpers/commonHelper.js";
 import { errorResponse, successResponse } from "../helpers/responseHelper.js";
 import { getLocalIPs } from "../helpers/requestHelper.js";
 import { encryptedToken } from "../utils/cryptoUtils.js";
-import { generateToken } from "../utils/token.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
+import { verifyRefreshToken } from "../middleware/authMiddelware.js";
 
 
 export const checkToken = async (req, res, next) => {
@@ -41,20 +42,31 @@ export const checkToken = async (req, res, next) => {
     }
     
     const encrypted = await encryptedToken(getUserInfo?.id);
-    let createTokenObj = await generateToken({
-        email: userData.mail?.trim(),
-        name: getUserInfo?.name.trim(),
-        groupId: getUserInfo?.group_id,
-        loginType: getUserInfo?.login_type,
-        userToken: encrypted,
-        type: "sso",
-        ssoMail: userData.mail,
-        encryptedId: getEncryptedUserId
-      });
+    let userObj = {
+      email: userData.mail?.trim(),
+      name: getUserInfo?.name.trim(),
+      groupId: getUserInfo?.group_id,
+      loginType: getUserInfo?.login_type,
+      userToken: encrypted,
+      type: "sso",
+      ssoMail: userData.mail,
+      encryptedId: getEncryptedUserId
+    };
+
+    let authToken = await generateAccessToken(userObj);
+    let refreshToken = await generateRefreshToken(userObj);
+
+    // Set refresh token in an httpOnly cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     let payload = {
       userRegistered,
-      jwtToken: createTokenObj,
+      jwtToken: authToken,
       userToken: encrypted,
       name:getUserInfo?.name.trim()
     }
@@ -64,3 +76,29 @@ export const checkToken = async (req, res, next) => {
     next(err); 
   }
 };
+
+export const refreshToken = async(req, res, next) => {
+  try {
+    const token = req.cookies.refreshToken;
+    if (!token) return errorResponse(res, "something went wrong", 401, { error: "Refresh token not found."});
+
+    let payload;
+    try {
+      payload = await verifyRefreshToken(token);
+    } catch (err) {
+      return errorResponse(res, "something went wrong", 403, { error: "Invalid or expired refresh token."});
+    }
+
+    let authToken;
+    try {
+      authToken = await generateAccessToken(payload?.userobj);
+    } catch (err) {
+      return errorResponse(res, "something went wrong", 500, { error: "Could not generate new access token."});
+    }
+
+    return successResponse(res, "Token updated successfully", { accessToken: authToken });
+  }catch (err) {
+    console.error("Refresh token error:", err);
+    next(err);
+  }
+}

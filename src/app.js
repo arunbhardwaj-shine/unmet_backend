@@ -7,13 +7,20 @@ import ibuRoutes from "./routes/ibuRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import cors from "cors";
 import { authenticateToken } from "./middleware/authMiddelware.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 
-
+app.use(cors(
+  {
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  }
+));
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 
