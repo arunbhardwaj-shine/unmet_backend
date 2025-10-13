@@ -21,18 +21,18 @@ export const checkToken = async (req, res, next) => {
       return errorResponse(res, "something went wrong", 400, { error: "User not found."});
     }
 
-    // await createLogs({
-    //   user_id: getUserInfo[0].id || 0,
-    //   platform: 2,
-    //   email: userData.mail,
-    //   ip_address: getLocalIPs(req),
-    //   user_agent: req.headers["user-agent"],
-    //   status: "success",
-    //   access_token: token,
-    //   id_token: idToken,
-    //   payload: JSON.stringify(userData),
-    //   login_time: new Date(),
-    // });
+    await createLogs({
+      user_id: getUserInfo?.id || 0,
+      platform: 2,
+      email: userData.mail,
+      ip_address: getLocalIPs(req),
+      user_agent: req.headers["user-agent"],
+      status: "success",
+      access_token: token,
+      id_token: idToken,
+      payload: JSON.stringify(userData),
+      login_time: new Date(),
+    });
 
     const checkUnmetUser = await getUnmetUserById(getUserInfo?.id, ['id']);
     const getEncryptedUserId = await getUserEncryptedId(getUserInfo?.id, ['id']);
