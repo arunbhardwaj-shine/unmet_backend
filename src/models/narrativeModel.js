@@ -1,7 +1,7 @@
 import db from "../config/db.js";
 
 export const getNarrativeCategoriesAndAgeGroups = async () => {
-  const contentCategory = ["Collection", "E-Learning", "FAQ", "Flyer", "Form", "Posters", "Publications", "Slide Deck", "Videos"];
+  const contentCategory = ["Collection", "E-Learning", "FAQ", "Flyer", "Form", "Posters", "Publications", "Slide Deck", "Videos", "Websites"];
   const categoryQuery = `SELECT * FROM narratives_categories where id != 1`;
   const ageGroupQuery = `SELECT * FROM narratives_age_groups  where id != 1`;
 
