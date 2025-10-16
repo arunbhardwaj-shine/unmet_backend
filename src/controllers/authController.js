@@ -102,3 +102,52 @@ export const refreshToken = async(req, res, next) => {
     next(err);
   }
 }
+
+export const login = async (req, res, next) => {
+  try{
+    const { mail } = req.body;
+    const getUserInfo = await findUserByEmail(mail, ['id','name','email','group_id','login_type']);
+    if (!getUserInfo) {
+      return errorResponse(res, "something went wrong", 400, { error: "User not found."});
+    }
+
+    const checkUnmetUser = await getUnmetUserById(getUserInfo?.id, ['id']);
+    const getEncryptedUserId = await getUserEncryptedId(getUserInfo?.id, ['id']);
+    let userRegistered = 0;
+    if (checkUnmetUser) {
+      userRegistered = 1;
+    }
+    const encrypted = await encryptedToken(getUserInfo?.id);
+    let userObj = {
+      email: mail?.trim(),
+      name: getUserInfo?.name.trim(),
+      groupId: getUserInfo?.group_id,
+      loginType: getUserInfo?.login_type,
+      userToken: encrypted,
+      type: "sso",
+      ssoMail: mail,
+      encryptedId: getEncryptedUserId
+    };
+
+    let authToken = await generateAccessToken(userObj);
+    let refreshToken = await generateRefreshToken(userObj);
+
+    // Set refresh token in an httpOnly cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    let payload = {
+      userRegistered,
+      jwtToken: authToken,
+      userToken: encrypted,
+      name:getUserInfo?.name.trim()
+    }
+    return successResponse(res, "Login successfull", payload);
+  }catch(err){
+    next(err);
+  }
+};
