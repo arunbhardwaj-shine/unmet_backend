@@ -9,6 +9,7 @@ export const getArticleContent = async (req) => {
         DATE_FORMAT(pdfs.creation_date, "%d.%M.%Y") as creation_date,
         pdfs.age_groups,
         pdfs.diagnosis,
+        pdfs.female_oriented,
         COUNT(DISTINCT pdf_action.id) AS rating,
         CASE
             WHEN COUNT(DISTINCT user_rate.id) > 0 THEN 1
@@ -88,6 +89,7 @@ export const getRecentViewContent = async (req) => {
         pdfs.tags,
         pdfs.file_type,
         pdfs.folder_name,
+        pdfs.female_oriented,
         pdfs.sold_unsold AS hide_in_hcp,
         pdfs.allow_share AS share,
         pdfs.allow_download AS download,
