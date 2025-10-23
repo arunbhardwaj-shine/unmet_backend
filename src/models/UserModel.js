@@ -20,6 +20,17 @@ export const findUserByEmail = async (email, fields = ['*']) => {
   return rows[0] || null;
 };
 
+export const findUserById = async (userId, fields = ['*']) => {
+  const columns = Array.isArray(fields) && fields.length ? fields.join(', ') : '*';
+  const [rows] = await db.execute(
+    `SELECT ${columns} FROM users
+     left join profiles ON profiles.user_id = users.id
+     WHERE group_id NOT IN (2,3) and profiles.created_by IN (29836198,2147494219,2147494218,2147494217,2147498474,22899) and users.id = ?`,
+    [userId]
+  );
+  return rows[0] || null;
+};
+
 export const getUsersProfileData = async (id,pdfids) => {
   const placeholders = pdfids.map(() => "?").join(",");
   const [rows] = await db.execute(

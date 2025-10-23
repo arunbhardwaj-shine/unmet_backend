@@ -1,4 +1,4 @@
-import { findUserByEmail } from "../models/UserModel.js";
+import { findUserByEmail, findUserById } from "../models/UserModel.js";
 import { createLogs } from "../models/LoginLogsModel.js";
 import { getUnmetUserById } from "../models/UnmetUsers.js";
 import { fetchUserData, getUserEncryptedId } from "../helpers/commonHelper.js";
@@ -151,3 +151,16 @@ export const login = async (req, res, next) => {
     next(err);
   }
 };
+
+export const details = async(req, res, next) => {
+  try{
+    const { userId } = req.body;
+    const getUserInfo = await findUserById(userId, ['users.name','profiles.first_name','profiles.last_name']);
+    if (!getUserInfo) {
+      return errorResponse(res, "something went wrong", 400, { error: "User not found."});
+    }
+    return successResponse(res, "Login successfull", getUserInfo);
+  }catch(err){
+    next(err);
+  }
+}

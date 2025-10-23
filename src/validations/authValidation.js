@@ -8,3 +8,7 @@ export const checktokenValidation = [
 export const loginValidation = [
     body("mail").notEmpty().withMessage("Mail is required"),
 ];
+
+export const userDetailValidation = [
+    body("userId").notEmpty().withMessage("User Id is required"),
+];
